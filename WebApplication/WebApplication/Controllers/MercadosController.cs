@@ -11,12 +11,13 @@ namespace WebApplication.Controllers
     public class MercadosController : ApiController
     {
         // GET: api/Eventos
-        public IEnumerable<Mercado> Get()
+        public IEnumerable<MercadoDTO> Get()
         {
             var repos = new MercadosRepository();
-            List<Mercado> mercados = repos.Retrieve();
+            List<MercadoDTO> mercados = repos.RetrieveDTO();
             return mercados;
         }
+
 
 
     }

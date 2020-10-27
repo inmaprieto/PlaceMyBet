@@ -28,7 +28,37 @@ namespace WebApplication.Models
 		public string TipoApuesta { get; set; }
 	}
 
+	public class ApuestaDTO
+	{
+		public ApuestaDTO(string emailUsuario, decimal cuotaApuesta, int dineroApuesta, string fechaApuesta, string tipoApuesta)
+		{
+			EmailUsuario = emailUsuario;
+			CuotaApuesta = cuotaApuesta;
+			DineroApuesta = dineroApuesta;
+			FechaApuesta = fechaApuesta;
+			TipoApuesta = tipoApuesta;
+		}
 
+		public string EmailUsuario { get; set; }
+		public decimal CuotaApuesta { get; set; }
+		public int DineroApuesta { get; set; }
+		public string FechaApuesta { get; set; }
+		public string TipoApuesta { get; set; }
+	}
+	public class ApuestaUsuario
+	{
+		public ApuestaUsuario(string emailUsuario, int idMercado, int dineroApuesta, string tipoApuesta)
+		{
+			EmailUsuario = emailUsuario;
+			IdMercado = idMercado;
+			DineroApuesta = dineroApuesta;
+			TipoApuesta = tipoApuesta;
+		}
 
+		public string EmailUsuario { get; set; }
+		public int IdMercado { get; set; }
+		public int DineroApuesta { get; set; }
+		public string TipoApuesta { get; set; }
+	}
 
 }

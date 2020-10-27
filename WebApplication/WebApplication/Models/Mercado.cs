@@ -26,6 +26,23 @@ namespace WebApplication.Models
 		public int DineroUnder { get; set; }
 		public decimal Tipo { get; set; }
 		public int EventoId { get; set; }
+
+
+	}
+
+	public class MercadoDTO
+	{
+		public MercadoDTO(decimal cuotaOver, decimal cuotaUnder, decimal tipo)
+		{
+			CuotaOver = cuotaOver;
+			CuotaUnder = cuotaUnder;
+			Tipo = tipo;
+			
+		}
+
+		public decimal CuotaOver { get; set; }
+		public decimal CuotaUnder { get; set; }
+		public decimal Tipo { get; set; }
 	}
 
 
