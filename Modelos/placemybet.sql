@@ -2,8 +2,8 @@
 -- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 28-09-2020 a las 23:17:33
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 30-10-2020 a las 18:09:03
 -- Versión del servidor: 10.4.14-MariaDB
 -- Versión de PHP: 7.2.33
 
@@ -31,9 +31,9 @@ CREATE TABLE `apuesta` (
   `id_apuesta` int(11) NOT NULL,
   `email_usuario` varchar(100) NOT NULL COMMENT 'fk_usuario',
   `id_mercado` int(11) NOT NULL COMMENT 'fk_mercado',
-  `cuota_apuesta` decimal(10,2) NOT NULL,
+  `cuota_apuesta` double(10,2) NOT NULL,
   `dinero_apuesta` int(11) NOT NULL,
-  `fecha_apuesta` datetime NOT NULL,
+  `fecha_apuesta` varchar(100) NOT NULL,
   `tipo_apuesta` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -42,8 +42,11 @@ CREATE TABLE `apuesta` (
 --
 
 INSERT INTO `apuesta` (`id_apuesta`, `email_usuario`, `id_mercado`, `cuota_apuesta`, `dinero_apuesta`, `fecha_apuesta`, `tipo_apuesta`) VALUES
-(1, 'inma@gmail.com', 1, '1.43', 50, '2020-09-28 23:14:26', 'over'),
-(2, 'pepe@gmail.com', 4, '2.85', 100, '2020-09-29 23:14:26', 'under');
+(59, 'inma@gmail.com', 2, 1.00, 20, '30/10/2020 17:40:45', 'under'),
+(60, 'inma@gmail.com', 1, 1.00, 20, '30/10/2020 17:47:11', 'over'),
+(61, 'inma@gmail.com', 1, 1.00, 20, '30/10/2020 17:50:51', 'over'),
+(62, 'inma@gmail.com', 1, 1.00, 20, '30/10/2020 17:52:27', 'over'),
+(63, 'inma@gmail.com', 1, 1.00, 20, '30/10/2020 18:06:33', 'over');
 
 -- --------------------------------------------------------
 
@@ -78,7 +81,7 @@ CREATE TABLE `evento` (
   `id_evento` int(11) NOT NULL COMMENT 'fk_mercado',
   `equipo_local` varchar(100) NOT NULL,
   `equipo_visitante` varchar(100) NOT NULL,
-  `fecha_evento` datetime NOT NULL
+  `fecha_evento` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -97,11 +100,11 @@ INSERT INTO `evento` (`id_evento`, `equipo_local`, `equipo_visitante`, `fecha_ev
 
 CREATE TABLE `mercado` (
   `id_mercado` int(11) NOT NULL,
-  `cuota_over` decimal(10,2) NOT NULL,
-  `cuota_under` decimal(10,2) NOT NULL,
+  `cuota_over` double(10,2) NOT NULL,
+  `cuota_under` double(10,2) NOT NULL,
   `dinero_over` int(11) NOT NULL,
   `dinero_under` int(11) NOT NULL,
-  `tipo` decimal(2,1) NOT NULL,
+  `tipo` double(2,1) NOT NULL,
   `id_evento` int(11) NOT NULL COMMENT 'fk_evento'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -110,10 +113,10 @@ CREATE TABLE `mercado` (
 --
 
 INSERT INTO `mercado` (`id_mercado`, `cuota_over`, `cuota_under`, `dinero_over`, `dinero_under`, `tipo`, `id_evento`) VALUES
-(1, '1.43', '2.85', 100, 50, '1.5', 1),
-(2, '1.90', '1.90', 100, 100, '2.5', 1),
-(3, '1.43', '2.85', 100, 20, '3.5', 1),
-(4, '2.85', '1.43', 50, 100, '3.5', 2);
+(1, 1.11, 3.99, 180, 50, 1.5, 1),
+(2, 2.56, 1.35, 100, 190, 2.5, 1),
+(3, 1.43, 2.85, 100, 20, 3.5, 1),
+(4, 1.20, 1.42, 50, 100, 3.5, 2);
 
 -- --------------------------------------------------------
 
@@ -181,6 +184,12 @@ ALTER TABLE `usuario`
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `apuesta`
+--
+ALTER TABLE `apuesta`
+  MODIFY `id_apuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT de la tabla `cuenta`
