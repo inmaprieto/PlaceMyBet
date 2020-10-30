@@ -33,7 +33,7 @@ namespace WebApplication.Models
                 while (res.Read())
                 {
                     //Debug.WriteLine("Recuperado: " + res.GetInt32(0) + " " + res.GetString(1) + " " + res.GetString(2) + " " + res.GetString(3));
-                    m = new Mercado(res.GetInt32(0), res.GetDecimal(1), res.GetDecimal(2), res.GetInt32(3),res.GetInt32(4),res.GetDecimal(5),res.GetInt32(6));
+                    m = new Mercado(res.GetInt32(0), res.GetDouble(1), res.GetDouble(2), res.GetInt32(3),res.GetInt32(4),res.GetDouble(5),res.GetInt32(6));
                     mercados.Add(m);
                 }
 
@@ -63,7 +63,7 @@ namespace WebApplication.Models
                 while (res.Read())
                 {
                     //Debug.WriteLine("Recuperado: " + res.GetInt32(0) + " " + res.GetString(1) + " " + res.GetString(2) + " " + res.GetString(3));
-                    m = new MercadoDTO( res.GetDecimal(1), res.GetDecimal(2), res.GetDecimal(5));
+                    m = new MercadoDTO( res.GetDouble(1), res.GetDouble(2), res.GetDouble(5));
                     mercados.Add(m);
                 }
 

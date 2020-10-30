@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 
@@ -34,7 +35,7 @@ namespace WebApplication.Models
                 while (res.Read())
                 {
                     //Debug.WriteLine("Recuperado: " + res.GetInt32(0) + " " + res.GetString(1) + " " + res.GetString(2) + " " + res.GetString(3));
-                    a = new Apuesta(res.GetInt32(0), res.GetString(1), res.GetInt32(2), res.GetDecimal(3), res.GetInt32(4),res.GetString(5),res.GetString(6));
+                    a = new Apuesta(res.GetInt32(0), res.GetString(1), res.GetInt32(2), res.GetDouble(3), res.GetInt32(4),res.GetString(5),res.GetString(6));
                     apuestas.Add(a);
                 }
 
@@ -64,7 +65,7 @@ namespace WebApplication.Models
                 while (res.Read())
                 {
                     //Debug.WriteLine("Recuperado: " + res.GetInt32(0) + " " + res.GetString(1) + " " + res.GetString(2) + " " + res.GetString(3));
-                    a = new ApuestaDTO(res.GetString(1), res.GetDecimal(3), res.GetInt32(4), res.GetString(5), res.GetString(6));
+                    a = new ApuestaDTO(res.GetString(1), res.GetDouble(3), res.GetInt32(4), res.GetString(5), res.GetString(6));
                     apuestas.Add(a);
                 }
 
@@ -81,22 +82,25 @@ namespace WebApplication.Models
         internal void Save(ApuestaUsuario ap) 
         {
            
-            //string emailUsuario, int mercadoId, decimal cuotaApuesta, int dineroApuesta, string fechaApuesta, string tipoApuesta
+            //string emailUsuario, int mercadoId, double cuotaApuesta, int dineroApuesta, string fechaApuesta, string tipoApuesta
             MySqlConnection con = Connect();
             MySqlCommand command = con.CreateCommand();
             // Recupero la cuota over o under 
             DateTime fecha_actual = DateTime.Now;
             Mercado mercadoOb = recuperarCuotaMercado(ap.IdMercado);
             // recupero la cuota correspondiente segun la apuesta realizada
-            decimal cuota;
+            double cuota;
             if (ap.TipoApuesta.Equals("under"))
             {
-                cuota = mercadoOb.CuotaUnder;
+                cuota = Math.Round(mercadoOb.CuotaUnder, 2);
             }
             else 
             {
-                cuota = mercadoOb.CuotaOver;
+                cuota = Math.Round(mercadoOb.CuotaOver, 2);
             }
+            Debug.WriteLine(Math.Round(cuota, 2));
+            Debug.WriteLine(mercadoOb.CuotaOver);
+            Debug.WriteLine(mercadoOb.CuotaUnder);
         
             //INSERT de la apuesta
             command.CommandText = "INSERT INTO apuesta (email_usuario, id_mercado, cuota_apuesta, dinero_apuesta, fecha_apuesta, tipo_apuesta)" +
@@ -117,22 +121,23 @@ namespace WebApplication.Models
 
         }
 
-        internal void actualizarMercado(int idMercado, decimal cuota_over, decimal cuota_under, int dinero, string tipoApuesta)
+        internal void actualizarMercado(int idMercado, double cuota_over, double cuota_under, int dinero, string tipoApuesta)
         {
             string tipo_dinero;
             MySqlConnection con = Connect();
             MySqlCommand command = con.CreateCommand();
             if (tipoApuesta.Equals("under"))
             {
-                tipo_dinero = "cuota_under";
+                tipo_dinero = "dinero_under";
             }
             else 
             {
-                tipo_dinero = "cuota_over";
+                tipo_dinero = "dinero_over";
             }
+            
             command.CommandText = "UPDATE mercado SET cuota_over=@CO, cuota_under=@CU, "+tipo_dinero+"=@D WHERE id_mercado = @ID";
-            command.Parameters.AddWithValue("@CO", cuota_over);
-            command.Parameters.AddWithValue("@CU", cuota_under);
+            command.Parameters.AddWithValue("@CO",  cuota_over);
+            command.Parameters.AddWithValue("@CU",  cuota_under);
             command.Parameters.AddWithValue("@D", dinero);
             command.Parameters.AddWithValue("@ID", idMercado);
 
@@ -151,30 +156,42 @@ namespace WebApplication.Models
 
         internal void ajusteCuotaDineroMercado(Mercado mercado, ApuestaUsuario apuesta) 
         {
-            double prob_over, prob_under;
-            int nuevo_dinero_apuesta;
+            double prob_over, prob_under, nueva_cuota_over, nueva_cuota_under;
+            double nuevo_dinero_apuesta;
             // modifico el dinero del mercado donde se ha realizado la apuesta          
             // recalcular nuevas cuotas over y under de probabilidad
-            int sumaOverUnder = mercado.DineroOver + mercado.DineroUnder;
+            double sumaOverUnder = mercado.DineroOver + mercado.DineroUnder;
             if (apuesta.TipoApuesta.Equals("over"))
             {
                 nuevo_dinero_apuesta = mercado.DineroOver + apuesta.DineroApuesta;
                 prob_over = nuevo_dinero_apuesta / sumaOverUnder;
-                prob_under = mercado.DineroUnder / sumaOverUnder;
+                prob_under =  mercado.DineroUnder / sumaOverUnder;
             }
-            else 
+            else
             {
                 nuevo_dinero_apuesta = mercado.DineroUnder + apuesta.DineroApuesta;
-                prob_over = mercado.DineroOver / sumaOverUnder;
-                prob_under = nuevo_dinero_apuesta / sumaOverUnder;
+                prob_over =  mercado.DineroOver / sumaOverUnder;
+                prob_under =  nuevo_dinero_apuesta / sumaOverUnder;
             }
+
+          /*
+            Debug.WriteLine(sumaOverUnder);
+            Debug.WriteLine(nuevo_dinero_apuesta);
+            Debug.WriteLine(prob_over);
+            Debug.WriteLine(prob_under);
+            Debug.WriteLine(mercado.DineroOver);
+            Debug.WriteLine(mercado.DineroUnder);
+          */
+
             // recalcular las nuevas cuotas del mercado segun probabilidad
-            double nueva_cuota_over = 1 / prob_over * 0.95;
-            double nueva_cuota_under = 1 / prob_under * 0.95;
-            Debug.WriteLine(nueva_cuota_over);
-            Debug.WriteLine(nueva_cuota_under);
+            nueva_cuota_over = (1 / prob_over) * 0.95;
+            nueva_cuota_under = (1 / prob_under) * 0.95;
+
             // actualizar datos en el mercado
-            // actualizarMercado(mercado.MercadoId, (decimal)(nueva_cuota_over), (decimal)(nueva_cuota_under), nuevo_dinero_apuesta, apuesta.TipoApuesta);
+          //  Debug.WriteLine(Math.Round(nueva_cuota_over, 2));
+         //   Debug.WriteLine(Math.Round(nueva_cuota_under, 2));
+
+            actualizarMercado(mercado.MercadoId, Math.Round(nueva_cuota_over, 2), Math.Round(nueva_cuota_under, 2), (int) nuevo_dinero_apuesta, apuesta.TipoApuesta);
 
         }
 
@@ -192,7 +209,7 @@ namespace WebApplication.Models
                 MySqlDataReader res = command.ExecuteReader();
                 while (res.Read())
                 {
-                    mercado = new Mercado(res.GetInt32(0), res.GetDecimal(1), res.GetDecimal(2), res.GetInt32(3), res.GetInt32(4), res.GetDecimal(5), res.GetInt32(6));
+                    mercado = new Mercado(res.GetInt32(0), res.GetDouble(1), res.GetDouble(2), res.GetInt32(3), res.GetInt32(4), res.GetDouble(5), res.GetInt32(6));
                 }
               //  Debug.WriteLine("La cuota de mercado " + ap.TipoApuesta + " es " + cuota);
                 con.Close();

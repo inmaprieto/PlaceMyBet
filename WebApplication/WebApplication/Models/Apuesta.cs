@@ -8,7 +8,7 @@ namespace WebApplication.Models
 {
 	public class Apuesta
 	{
-		public Apuesta(int apuestaId, string emailUsuario, int mercadoId, decimal cuotaApuesta, int dineroApuesta, string fechaApuesta, string tipoApuesta)
+		public Apuesta(int apuestaId, string emailUsuario, int mercadoId, double cuotaApuesta, int dineroApuesta, string fechaApuesta, string tipoApuesta)
 		{
 			ApuestaId = apuestaId;
 			EmailUsuario = emailUsuario;
@@ -22,7 +22,7 @@ namespace WebApplication.Models
 		public int ApuestaId { get; set; }
 		public string EmailUsuario { get; set; }
 		public int MercadoId { get; set; }
-		public decimal CuotaApuesta { get; set; }
+		public double CuotaApuesta { get; set; }
 		public int DineroApuesta { get; set; }
 		public string FechaApuesta { get; set; }
 		public string TipoApuesta { get; set; }
@@ -30,7 +30,7 @@ namespace WebApplication.Models
 
 	public class ApuestaDTO
 	{
-		public ApuestaDTO(string emailUsuario, decimal cuotaApuesta, int dineroApuesta, string fechaApuesta, string tipoApuesta)
+		public ApuestaDTO(string emailUsuario, double cuotaApuesta, int dineroApuesta, string fechaApuesta, string tipoApuesta)
 		{
 			EmailUsuario = emailUsuario;
 			CuotaApuesta = cuotaApuesta;
@@ -40,7 +40,7 @@ namespace WebApplication.Models
 		}
 
 		public string EmailUsuario { get; set; }
-		public decimal CuotaApuesta { get; set; }
+		public double CuotaApuesta { get; set; }
 		public int DineroApuesta { get; set; }
 		public string FechaApuesta { get; set; }
 		public string TipoApuesta { get; set; }

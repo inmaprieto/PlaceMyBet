@@ -8,7 +8,7 @@ namespace WebApplication.Models
 {
 	public class Mercado
 	{
-		public Mercado(int mercadoId, decimal cuotaOver, decimal cuotaUnder, int dineroOver, int dineroUnder, decimal tipo, int eventoId)
+		public Mercado(int mercadoId, double cuotaOver, double cuotaUnder, int dineroOver, int dineroUnder, double tipo, int eventoId)
 		{
 			MercadoId = mercadoId;
 			CuotaOver = cuotaOver;
@@ -20,11 +20,11 @@ namespace WebApplication.Models
 		}
 
 		public int MercadoId { get; set; }
-		public decimal CuotaOver { get; set; }
-		public decimal CuotaUnder { get; set; }
+		public double CuotaOver { get; set; }
+		public double CuotaUnder { get; set; }
 		public int DineroOver { get; set; }
 		public int DineroUnder { get; set; }
-		public decimal Tipo { get; set; }
+		public double Tipo { get; set; }
 		public int EventoId { get; set; }
 
 
@@ -32,7 +32,7 @@ namespace WebApplication.Models
 
 	public class MercadoDTO
 	{
-		public MercadoDTO(decimal cuotaOver, decimal cuotaUnder, decimal tipo)
+		public MercadoDTO(double cuotaOver, double cuotaUnder, double tipo)
 		{
 			CuotaOver = cuotaOver;
 			CuotaUnder = cuotaUnder;
@@ -40,9 +40,9 @@ namespace WebApplication.Models
 			
 		}
 
-		public decimal CuotaOver { get; set; }
-		public decimal CuotaUnder { get; set; }
-		public decimal Tipo { get; set; }
+		public double CuotaOver { get; set; }
+		public double CuotaUnder { get; set; }
+		public double Tipo { get; set; }
 	}
 
 
